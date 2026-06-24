@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TechLab E-Commerce</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body class="bg-gray-50 text-gray-800 font-sans antialiased">
+    <nav class="bg-blue-700 text-white shadow-lg sticky top-0 z-50">
+      <div
+        class="container mx-auto px-6 py-4 flex justify-between items-center"
+      >
+        <h1 class="text-2xl font-bold tracking-wider">
+          <i class="fas fa-laptop-code mr-2"></i>TechLab Store
+        </h1>
+        <div class="flex items-center gap-6">
+          <button
+            onclick="toggleAdmin()"
+            class="hover:text-blue-200 transition"
+          >
+            <i class="fas fa-user-cog mr-1"></i> Admin
+          </button>
+          <button
+            onclick="toggleCart()"
+            class="relative hover:text-blue-200 transition"
+          >
+            <i class="fas fa-shopping-cart text-xl"></i>
+            <span
+              id="cart-count"
+              class="absolute -top-2 -right-3 bg-red-500 text-xs font-bold px-2 py-0.5 rounded-full shadow"
+              >0</span
+            >
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container mx-auto px-6 py-8">
+      <section id="catalogo-section">
+        <h2 class="text-3xl font-extrabold mb-8 text-gray-800 border-b pb-2">
+          Nuestros Productos
+        </h2>
+        <div
+          id="productos-container"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+        ></div>
+      </section>
+
+      <section
+        id="admin-section"
+        class="hidden mt-12 bg-white p-8 rounded-xl shadow-md border border-gray-100"
+      >
+        <h2 class="text-2xl font-bold mb-6 text-blue-700 border-b pb-2">
+          Gestión de Productos
+        </h2>
+        <form id="producto-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <input type="hidden" id="prod-id" />
+
+          <div>
+            <label class="block text-sm font-semibold mb-2"
+              >Nombre del Producto</label
+            >
+            <input
+              type="text"
+              id="prod-nombre"
+              class="w-full border border-gray-300 p-3 rounded focus:outline-none focus:border-blue-500"
+              required
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold mb-2">Categoría</label>
+            <select
+              id="prod-categoria"
+              class="w-full border border-gray-300 p-3 rounded focus:outline-none focus:border-blue-500"
+              required
+            >
+              <option value="" disabled selected>Cargando categorías...</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold mb-2">Precio ($)</label>
+            <input
+              type="number"
+              step="0.01"
+              id="prod-precio"
+              class="w-full border border-gray-300 p-3 rounded focus:outline-none focus:border-blue-500"
+              required
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold mb-2"
+              >Stock Disponible</label
+            >
+            <input
+              type="number"
+              id="prod-stock"
+              class="w-full border border-gray-300 p-3 rounded focus:outline-none focus:border-blue-500"
+              required
+            />
+          </div>
+
+          <div class="md:col-span-2">
+            <label class="block text-sm font-semibold mb-2"
+              >URL de Imagen</label
+            >
+            <input
+              type="text"
+              id="prod-imagen"
+              class="w-full border border-gray-300 p-3 rounded focus:outline-none focus:border-blue-500"
+              placeholder="https://ejemplo.com/imagen.jpg"
+            />
+          </div>
+
+          <div class="md:col-span-2 flex justify-end mt-4">
+            <button
+              type="button"
+              onclick="toggleAdmin()"
+              class="mr-4 text-gray-500 hover:text-gray-700"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded shadow transition"
+            >
+              Guardar Producto
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <div
+      id="cart-sidebar"
+      class="fixed inset-y-0 right-0 w-80 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out z-50 flex flex-col"
+    >
+      <div
+        class="p-4 bg-blue-700 text-white flex justify-between items-center shadow-md"
+      >
+        <h2 class="text-xl font-bold">
+          <i class="fas fa-shopping-bag mr-2"></i>Tu Carrito
+        </h2>
+        <button onclick="toggleCart()" class="text-white hover:text-gray-200">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      <div id="cart-items" class="p-4 flex-grow overflow-y-auto bg-gray-50">
+        <p class="text-gray-500 text-center mt-10">El carrito está vacío.</p>
+      </div>
+      <div class="p-4 border-t bg-white">
+        <button
+          onclick="vaciarCarrito()"
+          class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded mb-2 font-semibold transition"
+        >
+          <i class="fas fa-trash mr-2"></i>Vaciar Carrito
+        </button>
+        <button
+          class="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded font-bold text-lg shadow transition"
+        >
+          Proceder al Pago
+        </button>
+      </div>
+    </div>
+
+    <div
+      id="overlay"
+      onclick="toggleCart()"
+      class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"
+    ></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
